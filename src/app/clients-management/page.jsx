@@ -268,19 +268,7 @@ function ClientsManagement() {
                             onChange={handleInputChange}
                             className="p-2 border border-gray-300 rounded"
                         />
-                        <input
-                            type="datetime-local"
-                            name="lastInteraction"
-                            value={
-                                newClient.lastInteraction
-                                    ? new Date(newClient.lastInteraction)
-                                          .toISOString()
-                                          .slice(0, 16)
-                                    : ""
-                            }
-                            onChange={handleInputChange}
-                            className="p-2 border border-gray-300 rounded"
-                        />
+                        
                     </div>
                     <div className="mt-4">
                         <button
