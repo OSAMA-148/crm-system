@@ -7,6 +7,7 @@ export default function Dashboard() {
     const router = useRouter();
 
     const handleLogout = () => {
+        localStorage.clear(); // مسح الـ localStorage
         Cookies.remove("token"); // إزالة التوكن من الكوكيز
         router.push("/login"); // إعادة التوجيه إلى صفحة تسجيل الدخول
     };

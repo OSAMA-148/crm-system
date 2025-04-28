@@ -8,24 +8,24 @@ import { v4 as uuidv4 } from "uuid";
 function OrdersManagement() {
     const [orders, setOrders] = useState([]);
     const [newOrder, setNewOrder] = useState({
-        orderNumber: "",
+        orderNumber: 0,
         price: 0,
-        product: 0,
         orderDate: "",
         status: "Pending",
-        userId: 0,
     });
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editingOrderId, setEditingOrderId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const [authToken, setAuthToken] = useState(""); // حالة لتخزين التوكن
 
     // Fetch orders from API
     useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const token = Cookies.get("token");
+                setAuthToken(token); // تخزين التوكن وقت الفتح
                 const res = await axios.get(
                     `${process.env.NEXT_PUBLIC_API_URL}/api/Orders`,
                     {
@@ -61,6 +61,13 @@ function OrdersManagement() {
                 }
             );
 
+            // تحديث التوكن لو رجع من الـ POST
+            if (res.data.token) {
+                setAuthToken(res.data.token);
+                Cookies.set("token", res.data.token, { expires: 7 }); // اختياري تحدث الكوكيز برضو
+                console.log("Token updated:", res.data.token);
+            }
+
             setOrders([...orders, res.data]);
             resetForm();
             setIsAdding(false);
@@ -74,18 +81,20 @@ function OrdersManagement() {
     // Delete an order
     const handleDeleteOrder = async (id) => {
         try {
-            const token = Cookies.get("token");
             await axios.delete(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/Orders/${id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/Orders`,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${authToken}`,
                     },
                 }
             );
             setOrders(orders.filter((order) => order.id !== id));
         } catch (err) {
-            console.error(err.message);
+            console.error(
+                "Error deleting order:",
+                err.response?.data || err.message
+            );
         }
     };
 
@@ -101,20 +110,20 @@ function OrdersManagement() {
                 ? new Date(order.orderDate).toISOString().slice(0, 16)
                 : "",
             status: order.status || "Pending",
+            userId: order.userId || 0,
         });
     };
 
+    // Update order
     const handleUpdateOrder = async () => {
         setLoading(true);
         try {
-            const token = Cookies.get("token");
-
             const res = await axios.put(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/Orders/${editingOrderId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/Orders`,
                 { ...newOrder },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${authToken}`, // استخدام التوكن المخزن هنا
                     },
                 }
             );
@@ -142,9 +151,9 @@ function OrdersManagement() {
                 name === "product" ||
                 name === "userId" ||
                 name === "orderNumber"
-                    ? Number(value) // تحويل القيم الرقمية إلى أرقام
+                    ? Number(value)
                     : name === "orderDate"
-                    ? new Date(value).toISOString() // تحويل التاريخ إلى ISO 8601
+                    ? new Date(value).toISOString()
                     : value,
         }));
     };
@@ -153,20 +162,10 @@ function OrdersManagement() {
         setNewOrder({
             orderNumber: "",
             price: 0,
-            product: 0,
             orderDate: "",
             status: "Pending",
-            userId: 0,
         });
     };
-
-    if (fetching) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-xl font-semibold">Loading orders...</p>
-            </div>
-        );
-    }
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen">
@@ -178,7 +177,6 @@ function OrdersManagement() {
                     <tr className="bg-gray-200 text-left">
                         <th className="p-4">Order Number</th>
                         <th className="p-4">Date</th>
-                        <th className="p-4">Product ID</th>
                         <th className="p-4">Status</th>
                         <th className="p-4">Price</th>
                         <th className="p-4">Actions</th>
@@ -193,7 +191,6 @@ function OrdersManagement() {
                                     ? new Date(order.orderDate).toLocaleString()
                                     : "-"}
                             </td>
-                            <td className="p-4">{order.product ?? "-"}</td>
                             <td className="p-4">{order.status ?? "-"}</td>
                             <td className="p-4">
                                 $
@@ -268,21 +265,7 @@ function OrdersManagement() {
                             />
                         </div>
 
-                        <div className="flex flex-col">
-                            <label className="mb-1 text-gray-700 font-medium">
-                                Product ID{" "}
-                                <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="number"
-                                name="product"
-                                placeholder="Enter Product ID"
-                                value={newOrder.product}
-                                onChange={handleInputChange}
-                                className="p-2 border border-gray-300 rounded"
-                                required
-                            />
-                        </div>
+                        
 
                         <div className="flex flex-col">
                             <label className="mb-1 text-gray-700 font-medium">

@@ -19,12 +19,14 @@ function ClientsManagement() {
     const [editingClientId, setEditingClientId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const [authToken, setAuthToken] = useState(""); // حالة لتخزين التوكن
 
     // Fetch clients from API
     useEffect(() => {
         const fetchClients = async () => {
             try {
                 const token = Cookies.get("token");
+                setAuthToken(token); // تخزين التوكن في الحالة
                 const res = await axios.get(
                     `${process.env.NEXT_PUBLIC_API_URL}/api/Client`,
                     {
@@ -44,32 +46,26 @@ function ClientsManagement() {
         fetchClients();
     }, []);
 
-    // Handle input change
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewClient((prev) => ({
-            ...prev,
-            [name]:
-                name === "lastInteraction"
-                    ? new Date(value).toISOString()
-                    : value,
-        }));
-    };
-
     // Add a new client
     const handleAddClient = async () => {
         setLoading(true);
         try {
-            const token = Cookies.get("token");
             const res = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/Client`,
                 newClient,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${authToken}`,
                     },
                 }
             );
+
+            // تحديث التوكن إذا تم إرجاعه
+            if (res.data.token) {
+                setAuthToken(res.data.token);
+                Cookies.set("token", res.data.token, { expires: 7 });
+            }
+
             setClients([...clients, res.data]);
             resetForm();
             setIsAdding(false);
@@ -93,19 +89,26 @@ function ClientsManagement() {
         });
     };
 
+    // Update a client
     const handleUpdateClient = async () => {
         setLoading(true);
         try {
-            const token = Cookies.get("token");
             const res = await axios.put(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/Client/`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/Client`,
                 newClient,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${authToken}`,
                     },
                 }
             );
+
+            // تحديث التوكن إذا تم إرجاعه
+            if (res.data.token) {
+                setAuthToken(res.data.token);
+                Cookies.set("token", res.data.token, { expires: 7 });
+            }
+
             setClients(
                 clients.map((client) =>
                     client.id === editingClientId ? res.data : client
@@ -123,19 +126,33 @@ function ClientsManagement() {
     // Delete a client
     const handleDeleteClient = async (id) => {
         try {
-            const token = Cookies.get("token");
             await axios.delete(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/Client`,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${authToken}`,
                     },
                 }
             );
             setClients(clients.filter((client) => client.id !== id));
         } catch (err) {
-            console.error(err.message);
+            console.error(
+                "Error deleting client:",
+                err.response?.data || err.message
+            );
         }
+    };
+
+    // Handle input change
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewClient((prev) => ({
+            ...prev,
+            [name]:
+                name === "lastInteraction"
+                    ? new Date(value).toISOString()
+                    : value,
+        }));
     };
 
     // Reset form
@@ -169,7 +186,6 @@ function ClientsManagement() {
                         <th className="p-4">Phone</th>
                         <th className="p-4">Email</th>
                         <th className="p-4">Address</th>
-                        <th className="p-4">Last Interaction</th>
                         <th className="p-4">Actions</th>
                     </tr>
                 </thead>
@@ -180,13 +196,8 @@ function ClientsManagement() {
                             <td className="p-4">{client.phone}</td>
                             <td className="p-4">{client.email}</td>
                             <td className="p-4">{client.address}</td>
-                            <td className="p-4">
-                                {client.lastInteraction
-                                    ? new Date(
-                                          client.lastInteraction
-                                      ).toLocaleString()
-                                    : "-"}
-                            </td>
+                            
+
                             <td className="p-4">
                                 <button
                                     className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mr-2"
