@@ -66,9 +66,8 @@ function ClientsManagement() {
                 Cookies.set("token", res.data.token, { expires: 7 });
             }
 
-            setClients([...clients, res.data]);
-            resetForm();
-            setIsAdding(false);
+            // إعادة تحميل الصفحة بعد الإضافة
+            window.location.reload();
         } catch (err) {
             console.error(err.message);
         } finally {
@@ -94,7 +93,7 @@ function ClientsManagement() {
         setLoading(true);
         try {
             const res = await axios.put(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/Client`,
+                `${process.envL}/api/Client`,
                 newClient,
                 {
                     headers: {
@@ -109,13 +108,8 @@ function ClientsManagement() {
                 Cookies.set("token", res.data.token, { expires: 7 });
             }
 
-            setClients(
-                clients.map((client) =>
-                    client.id === editingClientId ? res.data : client
-                )
-            );
-            resetForm();
-            setIsEditing(false);
+            // إعادة تحميل الصفحة بعد التحديث
+            window.location.reload();
         } catch (err) {
             console.error(err.message);
         } finally {
@@ -196,7 +190,6 @@ function ClientsManagement() {
                             <td className="p-4">{client.phone}</td>
                             <td className="p-4">{client.email}</td>
                             <td className="p-4">{client.address}</td>
-                            
 
                             <td className="p-4">
                                 <button
@@ -268,7 +261,6 @@ function ClientsManagement() {
                             onChange={handleInputChange}
                             className="p-2 border border-gray-300 rounded"
                         />
-                        
                     </div>
                     <div className="mt-4">
                         <button

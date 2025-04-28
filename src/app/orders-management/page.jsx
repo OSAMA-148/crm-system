@@ -68,9 +68,8 @@ function OrdersManagement() {
                 console.log("Token updated:", res.data.token);
             }
 
-            setOrders([...orders, res.data]);
-            resetForm();
-            setIsAdding(false);
+            // إعادة تحميل الصفحة بعد الإضافة
+            window.location.reload();
         } catch (err) {
             console.error(err.message);
         } finally {
@@ -128,13 +127,8 @@ function OrdersManagement() {
                 }
             );
 
-            setOrders(
-                orders.map((order) =>
-                    order.id === editingOrderId ? res.data : order
-                )
-            );
-            resetForm();
-            setIsEditing(false);
+            // إعادة تحميل الصفحة بعد التحديث
+            window.location.reload();
         } catch (err) {
             console.error(err.message);
         } finally {
@@ -264,8 +258,6 @@ function OrdersManagement() {
                                 required
                             />
                         </div>
-
-                        
 
                         <div className="flex flex-col">
                             <label className="mb-1 text-gray-700 font-medium">

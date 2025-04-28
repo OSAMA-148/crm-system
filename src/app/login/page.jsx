@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const fetchUserRole = async (token) => {
     try {
         const profileRes = await fetch(
-            "https://crmcrm.runasp.net/api/account/Profile",
+            `${process.env.NEXT_PUBLIC_API_URL}/api/account/Profile`,
             {
                 method: "GET",
                 headers: {
@@ -122,7 +122,7 @@ export default function LoginPage() {
 
                 <button
                     type="submit"
-                    className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700"
+                    className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 cursor-pointer transition duration-200 ease-in-out"
                 >
                     SIGN IN
                 </button>
