@@ -16,5 +16,5 @@ export function middleware(request) {
 }
 
 export const config = {
-    matcher: ["/clients", "/orders"],
+    matcher: ["/clients-management", "/orders-management"],
 };

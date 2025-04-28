@@ -4,20 +4,23 @@ import Link from "next/link";
 export default function Home() {
   return (
       <>
-          <div className="flex flex-col justify-center items-center w-full h-full gap-10 b">
-              <Link
-                  href="/login"
-                  className="bg-blue-500 w-48 p-2 rounded-full text-2xl text-white text-center min-w-[200px] hover:bg-blue-600 transition duration-300"
-              >
-                  Login
-              </Link>
-              <Link
-                  href="/register"
-                  className="bg-green-700 w-48 p-2 rounded-full text-2xl text-white text-center min-w-[200px] hover:bg-green-800 transition duration-300"
-              >
-                  Register
-              </Link>
-          </div>
+          <div className="flex items-center justify-center min-h-screen bg-slate-300 w-full">
+                      <div className="flex flex-col gap-4">
+                          
+                          <div className="flex flex-col gap-4">
+                              <Link href="/login">
+                                  <button className="w-64 bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition duration-300 ">
+                                      Login
+                                  </button>
+                              </Link>
+                              <Link href="/register">
+                                  <button className="w-64 bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition duration-300">
+                                      Register
+                                  </button>
+                              </Link>
+                          </div>
+                      </div>
+                  </div>
       </>
   );
 }

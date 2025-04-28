@@ -10,7 +10,7 @@ export default function withRole(Component, allowedRoles) {
         useEffect(() => {
             const role = localStorage.getItem("role"); // قراءة الدور من localStorage
             if (!role || !allowedRoles.includes(role)) {
-                router.push("/unauthorized"); // إعادة التوجيه إذا لم يكن لديه الصلاحية
+                router.push("/not-found"); // إعادة التوجيه إذا لم يكن لديه الصلاحية
             }
         }, []);
 

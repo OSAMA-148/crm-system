@@ -23,7 +23,7 @@ export default function LoginPage() {
 
         try {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/login`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/account/login`,
                 {
                     method: "POST",
                     headers: {
@@ -39,7 +39,7 @@ export default function LoginPage() {
 
             const data = await res.json();
             Cookies.set("token", data.token, { expires: 7 }); // تخزين التوكن في الكوكيز لمدة 7 أيام
-            localStorage.setItem("role", data.role); // تخزين الدور في localStorage
+             // تخزين الدور في localStorage
             toast.success("Login successful!");
             router.push("/dashboard");
         } catch (err) {

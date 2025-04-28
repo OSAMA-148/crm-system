@@ -54,6 +54,8 @@ export default function RegisterPage() {
             if (!res.ok) {
                 throw new Error("Registration failed");
             }
+            const data = await res.json();
+            localStorage.setItem("role", role);
             toast.success("Registration successful! Please log in.");
             router.push("/login");
         } catch (err) {

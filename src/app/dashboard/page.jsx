@@ -1,27 +1,41 @@
+"use client";
 import Link from "next/link";
+import Cookies from "js-cookie"; // استيراد مكتبة js-cookie
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
+    const router = useRouter();
+
+    const handleLogout = () => {
+        Cookies.remove("token"); // إزالة التوكن من الكوكيز
+        router.push("/login"); // إعادة التوجيه إلى صفحة تسجيل الدخول
+    };
+
     return (
-        <div className="p-8">
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <ul className="mt-4">
-                <li>
-                    <Link
-                        href="/orders-management"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Orders Management
+        <div className="flex items-center justify-center min-h-screen bg-slate-300 w-full">
+            <div className="flex flex-col gap-4 items-center">
+                <h1 className="text-3xl font-bold text-center mb-6 text-black">
+                    Dashboard
+                </h1>
+                <div className="flex flex-col gap-4">
+                    <Link href="/orders-management">
+                        <button className="w-64 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                            Orders Management
+                        </button>
                     </Link>
-                </li>
-                <li>
-                    <Link
-                        href="/clients-management"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Clients Management
+                    <Link href="/clients-management">
+                        <button className="w-64 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                            Clients Management
+                        </button>
                     </Link>
-                </li>
-            </ul>
+                </div>
+                <button
+                    onClick={handleLogout}
+                    className="w-64 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition duration-300 mt-6"
+                >
+                    Logout
+                </button>
+            </div>
         </div>
     );
 }
