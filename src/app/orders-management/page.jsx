@@ -12,6 +12,7 @@ function OrdersManagement() {
         price: 0,
         orderDate: "",
         status: "Pending",
+        product: "",
     });
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -142,7 +143,6 @@ function OrdersManagement() {
             ...prev,
             [name]:
                 name === "price" ||
-                name === "product" ||
                 name === "userId" ||
                 name === "orderNumber"
                     ? Number(value)
@@ -154,10 +154,11 @@ function OrdersManagement() {
 
     const resetForm = () => {
         setNewOrder({
-            orderNumber: "",
-            price: 0,
-            orderDate: "",
-            status: "Pending",
+            orderNumber: 0, // تأكد من أن القيمة رقم
+            price: 0, // تأكد من أن القيمة رقم
+            orderDate: "", // تأكد من أن القيمة نص فارغ
+            status: "Pending", // تأكد من أن القيمة نص
+            product: "", // تأكد من أن القيمة نص
         });
     };
 
@@ -171,6 +172,7 @@ function OrdersManagement() {
                     <tr className="bg-gray-200 text-left">
                         <th className="p-4">Order Number</th>
                         <th className="p-4">Date</th>
+                        <th className="p-4">Product</th>
                         <th className="p-4">Status</th>
                         <th className="p-4">Price</th>
                         <th className="p-4">Actions</th>
@@ -185,6 +187,7 @@ function OrdersManagement() {
                                     ? new Date(order.orderDate).toLocaleString()
                                     : "-"}
                             </td>
+                            <td className="p-4">{order.product ?? "-"}</td>
                             <td className="p-4">{order.status ?? "-"}</td>
                             <td className="p-4">
                                 $
@@ -234,7 +237,7 @@ function OrdersManagement() {
                                 <span className="text-red-500">*</span>
                             </label>
                             <input
-                                type="text"
+                                type="number"
                                 name="orderNumber"
                                 placeholder="Enter Order Number"
                                 value={newOrder.orderNumber}
@@ -253,6 +256,20 @@ function OrdersManagement() {
                                 name="price"
                                 placeholder="Enter Price"
                                 value={newOrder.price}
+                                onChange={handleInputChange}
+                                className="p-2 border border-gray-300 rounded"
+                                required
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <label className="mb-1 text-gray-700 font-medium">
+                                Product <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="product"
+                                placeholder="Enter you're Product"
+                                value={newOrder.product}
                                 onChange={handleInputChange}
                                 className="p-2 border border-gray-300 rounded"
                                 required
