@@ -66,7 +66,6 @@ function OrdersManagement() {
             if (res.data.token) {
                 setAuthToken(res.data.token);
                 Cookies.set("token", res.data.token, { expires: 7 }); // اختياري تحدث الكوكيز برضو
-                console.log("Token updated:", res.data.token);
             }
 
             // إعادة تحميل الصفحة بعد الإضافة
