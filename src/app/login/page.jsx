@@ -6,7 +6,6 @@ import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
-// دالة مستقلة لجلب الـ Role من API
 const fetchUserRole = async (token) => {
     try {
         const profileRes = await fetch(
@@ -25,9 +24,7 @@ const fetchUserRole = async (token) => {
         }
 
         const profileData = await profileRes.json();
-        console.log(profileData); // تأكد من شكل الداتا لو حابب
-
-        return profileData.role; // تأكد إن المسار دا صح حسب اللى راجع من الـ API
+        return profileData.role;
     } catch (error) {
         console.error("Error fetching user role:", error);
         throw error;
@@ -40,10 +37,12 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false); // حالة التحميل
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setIsLoading(true); // بدء التحميل
 
         try {
             const res = await fetch(
@@ -78,11 +77,13 @@ export default function LoginPage() {
         } catch (err) {
             console.error(err);
             setError("Login error");
+        } finally {
+            setIsLoading(false); // إنهاء التحميل
         }
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-200">
+        <div className="flex min-h-screen items-center justify-center">
             <form
                 onSubmit={handleSubmit}
                 className="bg-white p-8 rounded-lg shadow-md w-96 text-black"
@@ -122,9 +123,14 @@ export default function LoginPage() {
 
                 <button
                     type="submit"
-                    className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 cursor-pointer transition duration-200 ease-in-out"
+                    className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 cursor-pointer transition duration-200 ease-in-out flex items-center justify-center"
+                    disabled={isLoading} // تعطيل الزر أثناء التحميل
                 >
-                    SIGN IN
+                    {isLoading ? (
+                        <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 rounded-full mr-2"></div>
+                    ) : (
+                        "SIGN IN"
+                    )}
                 </button>
 
                 <div className="text-center mt-4">

@@ -64,7 +64,7 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-200">
+        <div className="flex min-h-screen items-center justify-center">
             <form
                 onSubmit={handleSubmit}
                 className="bg-white p-8 rounded shadow-lg w-96 text-black"

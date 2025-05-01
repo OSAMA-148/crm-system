@@ -2,20 +2,21 @@
 import Link from "next/link";
 import Cookies from "js-cookie"; // استيراد مكتبة js-cookie
 import { useRouter } from "next/navigation";
-
+import { toast } from "react-toastify"; // استيراد مكتبة toastify
 export default function Dashboard() {
     const router = useRouter();
 
     const handleLogout = () => {
         localStorage.clear(); // مسح الـ localStorage
         Cookies.remove("token"); // إزالة التوكن من الكوكيز
+        toast.success("Logout successful!"); // رسالة نجاح الخروج
         router.push("/login"); // إعادة التوجيه إلى صفحة تسجيل الدخول
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-300 w-full">
+        <div className="flex items-center justify-center min-h-screen w-full">
             <div className="flex flex-col gap-4 items-center">
-                <h1 className="text-3xl font-bold text-center mb-6 text-black">
+                <h1 className="text-3xl font-bold text-center mb-6 ">
                     Dashboard
                 </h1>
                 <div className="flex flex-col gap-4">
