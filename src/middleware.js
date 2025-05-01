@@ -1,20 +1,24 @@
 import { NextResponse } from "next/server";
 
-export function middleware(request) {
-    const token = request.cookies.get("token")?.value;
-    const protectedPaths = ["/clients", "/orders"];
-    const currentPath = request.nextUrl.pathname;
+export function middleware(req) {
+    // ✅ عرض كل الكوكيز في اللوج
+    const token = req.cookies.get("token")?.value; // استخدم ?.value لاستخراج التوكين
 
-    if (protectedPaths.includes(currentPath)) {
-        if (!token) {
-            const loginUrl = new URL("/login", request.url);
-            return NextResponse.redirect(loginUrl);
-        }
+    
+
+    const isAuthPage = ["/login", "/register"].includes(req.nextUrl.pathname);
+
+    if (!token && !isAuthPage) {
+        return NextResponse.redirect(new URL("/not-found", req.url)); // 🔒 توجيه المستخدم إلى تسجيل الدخول
     }
 
-    return NextResponse.next();
+    if (token && isAuthPage) {
+        return NextResponse.redirect(new URL("/dashboard", req.url)); // 🔐 منع الدخول لصفحة تسجيل الدخول إذا كان التوكين موجود
+    }
+
+    return NextResponse.next(); // ✅ السماح بالمتابعة
 }
 
 export const config = {
-    matcher: ["/clients-management", "/orders-management"],
+    matcher: ["/clients-management", "/orders-management" , "/dashboard"], // 🔒 تحديد المسارات المحمية
 };
