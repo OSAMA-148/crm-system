@@ -93,7 +93,7 @@ function ClientsManagement() {
         setLoading(true);
         try {
             const res = await axios.put(
-                `${process.envL}/api/Client`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/Client`,
                 newClient,
                 {
                     headers: {
