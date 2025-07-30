@@ -169,7 +169,7 @@ function ClientsManagement() {
     }
 
     return (
-        <div className="p-8 bg-gray-100 min-h-screen">
+        <div className="p-8 bg-gray-100 min-h-screen w-screen">
             <h1 className="text-3xl font-bold mb-6">Clients Management</h1>
 
             {/* Table to display clients */}
@@ -191,9 +191,9 @@ function ClientsManagement() {
                             <td className="p-4">{client.email}</td>
                             <td className="p-4">{client.address}</td>
 
-                            <td className="p-4">
+                            <td className="p-4 flex gap-2 max-lg:flex-col">
                                 <button
-                                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mr-2"
+                                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 "
                                     onClick={() =>
                                         handleDeleteClient(client.id)
                                     }

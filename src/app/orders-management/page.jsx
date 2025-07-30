@@ -162,7 +162,7 @@ function OrdersManagement() {
     };
 
     return (
-        <div className="p-8 bg-gray-100 min-h-screen">
+        <div className="p-8 bg-gray-100 h-screen w-full">
             <h1 className="text-3xl font-bold mb-6">Orders Management</h1>
 
             {/* Table to display orders */}

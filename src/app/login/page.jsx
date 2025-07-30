@@ -83,7 +83,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center">
+        <div className="flex h-screen items-center justify-center ">
             <form
                 onSubmit={handleSubmit}
                 className="bg-white p-8 rounded-lg shadow-md w-96 text-black"
